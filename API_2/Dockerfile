@@ -14,8 +14,8 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 
 # Set the environment variable to define the HTTP port and expose it
-ENV ASPNETCORE_HTTP_PORTS=6000
-EXPOSE 6000
+ENV ASPNETCORE_HTTP_PORTS=7000
+EXPOSE 7000
 
 # Set the working directory and copy the published application from the build stage
 WORKDIR /app

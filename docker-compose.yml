@@ -10,5 +10,5 @@ services:
     image: kotenko2002/api2
     container_name: api2
     ports: 
-      - '6000:6000'
+      - '7000:7000'
     restart: unless-stopped
