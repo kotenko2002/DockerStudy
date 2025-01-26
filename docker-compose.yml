@@ -4,19 +4,39 @@ services:
     image: kotenko2002/api1
     container_name: api1
     ports: 
-      - '5000:5000'
+      - 5000:5000
     restart: unless-stopped
+    depends_on:
+      - db
     networks:
       - studydocker
   api2:
     image: kotenko2002/api2
     container_name: api2
     ports: 
-      - '7000:7000'
+      - 7000:7000
+    restart: unless-stopped
+    depends_on:
+      - db
+    networks:
+      - studydocker
+  db:
+    image: postgres
+    container_name: db
+    ports:
+      - 5439:5432
+    environment:
+      - POSTGRES_PASSWORD=Qwe123!
+    volumes:
+      - db_data:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
       - studydocker
+
 networks:
   studydocker:
     name: studydocker
     driver: bridge
+
+volumes:
+  db_data:
