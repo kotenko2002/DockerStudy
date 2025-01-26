@@ -1,0 +1,14 @@
+version: '3.5'
+services:
+  api1:
+    image: kotenko2002/api1
+    container_name: api1
+    ports: 
+      - '5000:5000'
+    restart: unless-stopped
+  api2:
+    image: kotenko2002/api2
+    container_name: api2
+    ports: 
+      - '6000:6000'
+    restart: unless-stopped

@@ -7,13 +7,15 @@ namespace API_2.Controllers
     public class PingController : ControllerBase
     {
         private readonly HttpClient _httpClient;
+        private readonly IConfiguration _configuration;
 
-        public PingController(HttpClient httpClient)
+        public PingController(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            _configuration = configuration;
         }
 
-        [HttpPost("RevicePing")]
+        [HttpGet("RevicePing")]
         public IActionResult RevicePing()
         {
             Console.WriteLine("Ping received.");
@@ -25,8 +27,8 @@ namespace API_2.Controllers
         {
             try
             {
-                var targetUrl = "https://localhost:5001/Ping/RevicePing";
-                var response = await _httpClient.PostAsync(targetUrl, null);
+                var targetUrl = $"http://{_configuration["AnotherApiHost"]}/Ping/RevicePing";
+                var response = await _httpClient.GetAsync(targetUrl);
 
                 if (response.IsSuccessStatusCode)
                 {
