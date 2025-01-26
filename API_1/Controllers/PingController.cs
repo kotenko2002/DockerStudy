@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using API_1.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API_1.Controllers
 {
@@ -8,17 +10,30 @@ namespace API_1.Controllers
     {
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
+        private readonly AppDbContext _context;
 
-        public PingController(HttpClient httpClient, IConfiguration configuration)
+        public PingController(
+            HttpClient httpClient,
+            IConfiguration configuration,
+            AppDbContext context)
         {
             _httpClient = httpClient;
             _configuration = configuration;
+            _context = context;
         }
 
         [HttpGet("RevicePing")]
-        public IActionResult RevicePing()
+        public async Task<IActionResult> RevicePing()
         {
             Console.WriteLine("Ping received.");
+
+            await _context.Pings.AddAsync(new Ping()
+            {
+                SenderName = ApiType.Api2,
+                ReciverName = ApiType.Api1,
+            });
+            await _context.SaveChangesAsync();
+
             return Ok("Pong");
         }
 
@@ -48,6 +63,18 @@ namespace API_1.Controllers
                 Console.WriteLine($"Error sending ping: {ex.Message}");
                 return StatusCode(500, "Error sending ping.");
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllPings()
+        {
+            Console.WriteLine("Ping received.");
+
+            var pings = await _context.Pings
+                .Where(p => p.ReciverName == ApiType.Api1)
+                .ToListAsync();
+
+            return Ok(pings);
         }
     }
 }
